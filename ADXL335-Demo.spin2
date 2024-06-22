@@ -1,6 +1,6 @@
 {
 ---------------------------------------------------------------------------------------------------
-    Filename:       ADXL335-Demo.spin
+    Filename:       ADXL335-Demo.spin2
     Description:    Demo of the ADXL335 driver
         * 3DoF data output
     Author:         Jesse Burt
@@ -16,23 +16,21 @@
 
 CON
 
-    _clkmode    = cfg._clkmode
-    _xinfreq    = cfg._xinfreq
+    _clkfreq    = cfg._clkfreq_def
+    _xtlfreq    = cfg._xtlfreq
 
 
 OBJ
 
-    cfg:    "boardcfg.flip"
-    time:   "time"
+    cfg:    "boardcfg.p2eval"
     sensor: "sensor.accel.3dof.adxl335"
-    ser:    "com.serial.terminal.ansi" | SER_BAUD=115_200
+    ser:    "com.serial.terminal.ansi" | SER_BAUD=2_000_000
     adc:    "signal.adc.mcp320x" | CS=0, SCK=1, MOSI=2, MISO=3, MODEL=3208
 
 
 PUB main()
 
     ser.start()
-    time.msleep(30)
     ser.clear()
     ser.strln(@"Serial terminal started")
 
@@ -42,8 +40,7 @@ PUB main()
         ser.strln(@"ADC driver failed to start - halting")
         repeat
 
-    adc.set_ref_voltage(3_265000)               ' set ADC's voltage reference (measure w/DMM)
-
+    adc.set_ref_voltage(3_250000)               ' set ADC's voltage reference (measure w/DMM)
     sensor.attach_adc(@adc)                     ' bind/attach to the ADC driver
     sensor.start()                              ' set scaling, clear bias
 
@@ -54,7 +51,7 @@ PUB main()
         show_accel_data()
 
 
-#include "acceldemo.common.spinh"
+#include "acceldemo.common.spin2h"
 
 DAT
 {
